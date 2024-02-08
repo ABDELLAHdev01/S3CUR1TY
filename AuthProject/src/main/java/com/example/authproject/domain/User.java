@@ -1,6 +1,5 @@
 package com.example.authproject.domain;
 
-import com.example.authproject.enm.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,15 +26,17 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
-    @Enumerated(EnumType.STRING)
+
+    @ManyToOne
     private Role role;
+
+
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getName().name())).toList();
     }
-
     @Override
     public String getPassword() {
         return password;
